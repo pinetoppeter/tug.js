@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example</title>
+  <style>
+    .dragable {
+      width: 3em;
+      height: 3em;
+      border: 1px solid black;
+    }
+
+    .dragging {
+      border: 3px solid black;
+    }
+
+    .dropable {
+      display: block;
+      position: absolute;
+      right: 25%;
+      width: 6em;
+      height: 6em;
+      border: 1px solid red;
+    }
+
+    .drag-entered {
+      border: 3px dashed black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="dragable">drag me!</div>
+    <div class="dragable">or me!</div>
+    <div class="dropable dragable">drop zone</div>
+  </div>
+  <script type="module">
+    import { Tug } from "./src/lib.ts";
+    
+    Tug.makeDragable({
+      selector: '.dragable', onDrop: (element) => {
+        console.log('i just got dropped', element);
+      }
+    })
+    Tug.makeDropable({ selector: '.dropable' })
+  </script>
+</body>
+
+</html>

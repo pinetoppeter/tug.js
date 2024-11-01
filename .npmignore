@@ -1,0 +1,10 @@
+/src
+/node_modules
+
+tsconfig.json
+tsup.config.ts
+index.html
+.gitignore
+package-lock.json
+
+.DS_Store

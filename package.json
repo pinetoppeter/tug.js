@@ -1,0 +1,30 @@
+{
+  "name": "tug.js",
+  "version": "0.0.1",
+  "description": "simple drag and drop lib built using xstate and typescript",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "drag",
+    "drop",
+    "dragndrop",
+    "drag and drop"
+  ],
+  "author": "Peter Hörmeyer",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "xstate": "^5.18.2"
+  },
+  "repository": {
+    "url": "https://github.com/..."
+  }
+}
