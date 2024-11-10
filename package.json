@@ -1,6 +1,6 @@
 {
   "name": "tug.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "simple drag and drop lib built using xstate and typescript",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
