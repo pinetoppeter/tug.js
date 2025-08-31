@@ -1,4 +1,4 @@
-import { AnyEventObject, createActor } from "xstate";
+import { AnyEventObject, createActor, StateMachine } from "xstate";
 import draggableMachine from "./machines/dragable";
 import { DragAndDropProps, DragProps, DropProps } from "./types";
 import dropableMachine from "./machines/dropable";
@@ -17,8 +17,15 @@ export const Tug = {
 const initDragOrDropForElement = (dragOrDropCallback: CallableFunction, props: DragAndDropProps): void => {
     const observer = new MutationObserver((mutationRecords: MutationRecord[]) => {
         mutationRecords.forEach((record: MutationRecord) => {
-            if ((record.target as HTMLElement)?.matches(props.selector)) {
-                initForElement(dragOrDropCallback, (record.target as HTMLElement));
+
+            if (record.addedNodes?.length) {
+                for (let i = 0; i < record.addedNodes.length; i++) {
+                    const addedNode = record.addedNodes[i] as HTMLElement;
+
+                    if (addedNode?.matches(props.selector)) {
+                        initForElement(dragOrDropCallback, addedNode);
+                    }
+                }
             }
         });
     });
@@ -92,9 +99,22 @@ const initDragableForElement = (props: DragProps) => (element: HTMLElement) => {
     actor.start();
     actor.on('positionChange', handleDragablePositionChange);
 
-    element.addEventListener('mousedown', () => {
-        actor.send({ type: 'mousedown' });
-    });
+    if (props.options?.dragHandle) {
+        if (Array.isArray(props.options.dragHandle)) {
+            console.log(props.options.dragHandle)
+            props.options.dragHandle.forEach(dragHandle => {
+                const dragHandles = element.querySelectorAll(dragHandle) ?? [];
+                listenForDragStart(dragHandles, actor);
+            });
+        }
+        else {
+            const dragHandleEl = element.querySelectorAll(props.options.dragHandle) ?? []; 
+            listenForDragStart(dragHandleEl, actor)
+        }
+    }
+    else {
+        listenForDragStart([element] as unknown as NodeListOf<Element>, actor);
+    }
 
     // mousemove has to be sent also 
     // to avoid inadvertently dropping
@@ -105,6 +125,12 @@ const initDragableForElement = (props: DragProps) => (element: HTMLElement) => {
     // send global mouseup event to all actors to ensure elements are eventually dropped
     window.addEventListener('mouseup', () => actor.send({ type: 'mouseup' }));
 }
+
+const listenForDragStart = (elements: NodeListOf<Element>, actor: any) => {
+    elements.forEach(element => element.addEventListener('mousedown', () => {
+        actor.send({ type: 'mousedown' });
+    }));
+} 
 
 const handleDragablePositionChange = (event: AnyEventObject): void => {
     const intersectingRect = event.data?.getBoundingClientRect();

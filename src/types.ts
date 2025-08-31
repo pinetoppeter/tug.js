@@ -1,7 +1,8 @@
 export type DragAndDropProps = {
     selector: string;
     options?: {
-        observe: boolean
+        observe?: boolean,
+        dragHandle?: string | string[] // css selector(s) 
     }
 };
 

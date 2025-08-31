@@ -8,8 +8,9 @@
   <title>Example</title>
   <style>
     .dragable {
-      width: 3em;
-      height: 3em;
+      position: relative;
+      width: 10em;
+      height: 10em;
       border: 1px solid black;
     }
 
@@ -21,32 +22,73 @@
       display: block;
       position: absolute;
       right: 25%;
-      width: 6em;
-      height: 6em;
-      border: 1px solid red;
+      width: 12em;
+      height: 12em;
+      border: 1px solid rebeccapurple;
     }
 
     .drag-entered {
       border: 3px dashed black;
+    }
+
+    .drag-handle {
+      width: 100%;
+      background: rebeccapurple;
+      color: wheat;
+      cursor:move;
+    }
+
+    .drag-handle-2 {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: wheat;
+      color: rebeccapurple;
+      cursor:move;
     }
   </style>
 </head>
 
 <body>
   <div id="app">
-    <div class="dragable">drag me!</div>
-    <div class="dragable">or me!</div>
+    <div class="dragable">
+      <div class="drag-handle">
+        start dragging here
+      </div>
+      <div>
+        drag me!
+      </div>
+      <div class="drag-handle-2">
+        or start dragging here
+      </div>
+    </div>
+    <div class="dragable">
+      cannot get dragged because of missing drag handle
+    </div>
     <div class="dropable dragable">drop zone</div>
   </div>
   <script type="module">
     import { Tug } from "./src/lib.ts";
-    
+
     Tug.makeDragable({
       selector: '.dragable', onDrop: (element) => {
         console.log('i just got dropped', element);
+      },
+      options: {
+        dragHandle: ['.drag-handle', 'div:nth-child(3)', 'button']
       }
     })
     Tug.makeDropable({ selector: '.dropable' })
+
+    setTimeout(() => {
+      let el = document.createElement('div');
+      el.innerText = 'late to the party';
+      el.classList.add('dragable');
+      let dragHandle = document.createElement('button');
+      dragHandle.innerText = "drag handle";
+      el.append(dragHandle);
+      document.getElementById('app').append(el);
+    }, 1000)
   </script>
 </body>
 
