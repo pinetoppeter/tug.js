@@ -24,7 +24,7 @@
   "devDependencies": {
     "tsup": "^8.3.0",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "vite": "^7.2.6"
   },
   "repository": {
     "url": "https://github.com/pinetoppeter/tug.js"
