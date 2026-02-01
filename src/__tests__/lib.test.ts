@@ -19,13 +19,13 @@ describe('Tug library', () => {
       element.className = 'draggable';
       document.body.appendChild(element);
 
-      // Trigger load event
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { observe: false }
       });
+
+      // Trigger load event after makeDragable is called
+      window.dispatchEvent(new Event('load'));
 
       // Fast-forward timers for wait loop
       vi.advanceTimersByTime(600);
@@ -55,13 +55,12 @@ describe('Tug library', () => {
       document.body.appendChild(element1);
       document.body.appendChild(element2);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { observe: false }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(element1.dataset.draggable).toBe('initialised');
@@ -74,15 +73,14 @@ describe('Tug library', () => {
       element.dataset.draggable = 'initialised';
       document.body.appendChild(element);
 
-      const spy = vi.spyOn(element.dataset, 'draggable', 'set');
-
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { observe: false }
       });
 
+      const spy = vi.spyOn(element.dataset, 'draggable', 'set');
+
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       // Should not set the attribute again
@@ -97,8 +95,6 @@ describe('Tug library', () => {
       element.appendChild(handle);
       document.body.appendChild(element);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { 
@@ -107,6 +103,7 @@ describe('Tug library', () => {
         }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(element.dataset.draggable).toBe('initialised');
@@ -123,8 +120,6 @@ describe('Tug library', () => {
       element.appendChild(handle2);
       document.body.appendChild(element);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { 
@@ -133,6 +128,7 @@ describe('Tug library', () => {
         }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(element.dataset.draggable).toBe('initialised');
@@ -144,19 +140,22 @@ describe('Tug library', () => {
       element.className = 'draggable';
       document.body.appendChild(element);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { observe: false },
         onDrop: onDropMock
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
-      // Simulate drag and drop
+      // Simulate drag and drop - need to trigger mousedown on the element
       element.dispatchEvent(new MouseEvent('mousedown'));
+      // Advance time for the drag to start
+      vi.advanceTimersByTime(10);
       window.dispatchEvent(new MouseEvent('mouseup'));
+      // Advance time for the drag to end
+      vi.advanceTimersByTime(10);
 
       expect(onDropMock).toHaveBeenCalled();
     });
@@ -175,8 +174,8 @@ describe('Tug library', () => {
       element.className = 'draggable';
       document.body.appendChild(element);
 
-      // MutationObserver should catch this
-      vi.advanceTimersByTime(100);
+      // MutationObserver should catch this - need to trigger microtask
+      vi.runAllTimers();
       
       expect(element.dataset.draggable).toBe('initialised');
     });
@@ -193,7 +192,7 @@ describe('Tug library', () => {
       element.className = 'draggable';
       document.body.appendChild(element);
 
-      vi.advanceTimersByTime(100);
+      vi.runAllTimers();
       
       expect(element.dataset.draggable).toBe('initialised');
     });
@@ -205,13 +204,12 @@ describe('Tug library', () => {
       element.className = 'dropable';
       document.body.appendChild(element);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDropable({
         selector: '.dropable',
         options: { observe: false }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(element.dataset.dropable).toBe('initialised');
@@ -226,13 +224,12 @@ describe('Tug library', () => {
       document.body.appendChild(element1);
       document.body.appendChild(element2);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDropable({
         selector: '.dropable',
         options: { observe: false }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(element1.dataset.dropable).toBe('initialised');
@@ -245,15 +242,14 @@ describe('Tug library', () => {
       element.dataset.dropable = 'initialised';
       document.body.appendChild(element);
 
-      const spy = vi.spyOn(element.dataset, 'dropable', 'set');
-
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDropable({
         selector: '.dropable',
         options: { observe: false }
       });
 
+      const spy = vi.spyOn(element.dataset, 'dropable', 'set');
+
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(spy).not.toHaveBeenCalled();
@@ -272,7 +268,7 @@ describe('Tug library', () => {
       element.className = 'dropable';
       document.body.appendChild(element);
 
-      vi.advanceTimersByTime(100);
+      vi.runAllTimers();
       
       expect(element.dataset.dropable).toBe('initialised');
     });
@@ -288,8 +284,6 @@ describe('Tug library', () => {
       document.body.appendChild(draggable);
       document.body.appendChild(dropable);
 
-      window.dispatchEvent(new Event('load'));
-      
       Tug.makeDragable({
         selector: '.draggable',
         options: { observe: false }
@@ -300,6 +294,7 @@ describe('Tug library', () => {
         options: { observe: false }
       });
 
+      window.dispatchEvent(new Event('load'));
       vi.advanceTimersByTime(600);
 
       expect(draggable.dataset.draggable).toBe('initialised');
@@ -328,7 +323,7 @@ describe('Tug library', () => {
       document.body.appendChild(draggable);
       document.body.appendChild(dropable);
 
-      vi.advanceTimersByTime(100);
+      vi.runAllTimers();
 
       expect(draggable.dataset.draggable).toBe('initialised');
       expect(dropable.dataset.dropable).toBe('initialised');

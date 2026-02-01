@@ -1,4 +1,4 @@
-import { AnyEventObject, createActor, StateMachine } from "xstate";
+import { createActor } from "xstate";
 import draggableMachine from "./machines/dragable";
 import { DragAndDropProps, DragProps, DropProps } from "./types";
 import dropableMachine from "./machines/dropable";
@@ -101,7 +101,6 @@ const initDragableForElement = (props: DragProps) => (element: HTMLElement) => {
 
     if (props.options?.dragHandle) {
         if (Array.isArray(props.options.dragHandle)) {
-            console.log(props.options.dragHandle)
             props.options.dragHandle.forEach(dragHandle => {
                 const dragHandles = element.querySelectorAll(dragHandle) ?? [];
                 listenForDragStart(dragHandles, actor);
@@ -132,7 +131,7 @@ const listenForDragStart = (elements: NodeListOf<Element>, actor: any) => {
     }));
 } 
 
-const handleDragablePositionChange = (event: AnyEventObject): void => {
+const handleDragablePositionChange = (event: any): void => {
     const intersectingRect = event.data?.getBoundingClientRect();
 
     if (!intersectingRect) {

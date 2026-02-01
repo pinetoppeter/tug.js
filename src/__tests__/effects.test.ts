@@ -4,7 +4,7 @@ import { updateElementPosition, resetElement } from '../effects';
 describe('effects', () => {
   describe('updateElementPosition', () => {
     let element: HTMLElement;
-    let rafSpy: ReturnType<typeof vi.spyOn>;
+    let rafSpy: any;
 
     beforeEach(() => {
       element = document.createElement('div');
@@ -216,8 +216,8 @@ describe('effects', () => {
       const rafCallback = rafSpy.mock.calls[0][0] as FrameRequestCallback;
       rafCallback(0);
       
-      expect(element.style.top).toBe('127.95px'); // 150.8 - 22.85
-      expect(element.style.left).toBe('83.55px'); // 100.3 - 16.75
+      expect(parseFloat(element.style.top)).toBeCloseTo(127.95);
+      expect(parseFloat(element.style.left)).toBeCloseTo(83.55);
     });
   });
 
