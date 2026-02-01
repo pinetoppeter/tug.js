@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsup",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [
     "drag",
@@ -22,9 +24,15 @@
     "xstate": "^5.18.2"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@vitest/ui": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8",
+    "happy-dom": "^15.11.7",
+    "jsdom": "^25.0.1",
     "tsup": "^8.3.0",
     "typescript": "^5.6.3",
-    "vite": "^7.2.6"
+    "vite": "^7.2.6",
+    "vitest": "^2.1.8"
   },
   "repository": {
     "url": "https://github.com/pinetoppeter/tug.js"
